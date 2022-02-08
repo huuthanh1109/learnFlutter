@@ -15,48 +15,26 @@ class Emlopees {
 
 class Emlopee {
   int? ResultId;
-  dynamic UpdatedTime;
+  String? ClassG;
+  String? ClassI;
 
   Emlopee({
     this.ResultId,
-    this.UpdatedTime,
+    this.ClassG,
+    this.ClassI,
   });
 
   Emlopee.fromJson(Map<dynamic, dynamic> json) {
     ResultId = json['ResultId'];
-    UpdatedTime = json['UpdatedTime'];
+    ClassG = json['ClassG'];
+    ClassI = json['ClassI'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['UpdatedTime'] = this.UpdatedTime;
+    data['ClassG'] = this.ClassG;
     data['ResultId'] = this.ResultId;
+    data['ClassI'] = this.ClassI;
     return data;
   }
 }
 
-final List<Emlopee> emlopees = [
-  Emlopee(
-    ResultId: 200770,
-    UpdatedTime: '2022-01-13T00:13:59',
-  ),
-  Emlopee(
-    ResultId: 200770,
-    UpdatedTime: '2022-01-13T00:13:59',
-  ),
-  Emlopee(
-    ResultId: 200770,
-    UpdatedTime: '2022-01-13T00:13:59',
-  ),
-  Emlopee(
-    ResultId: 200770,
-    UpdatedTime: '2022-01-13T00:13:59',
-  ),
-  Emlopee(
-    ResultId: 200770,
-    UpdatedTime: '2022-01-13T00:13:59',
-  ),
-  Emlopee(
-    ResultId: 200770,
-    UpdatedTime: '2022-01-13T00:13:59',
-  ),
-];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learncallapi/modual/home/homepage.dart';
+
+import 'modual/company/company_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         unselectedWidgetColor: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const CompanyScreen(),
     );
   }
 }

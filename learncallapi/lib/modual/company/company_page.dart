@@ -1,20 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:learncallapi/models/company_model.dart';
-import 'package:learncallapi/modual/home/company_container.dart';
+import 'package:learncallapi/modual/company/company_container.dart';
+import 'package:learncallapi/modual/company/company_model.dart';
+import 'package:learncallapi/modual/emlopee/emlopee_page.dart';
 import 'package:learncallapi/services/company_service.dart';
 import 'package:learncallapi/widgets/slidable_widget.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class CompanyScreen extends StatefulWidget {
+  const CompanyScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _CompanyScreenState createState() => _CompanyScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final homeService = CompanyService();
-  List<Company> homes = [];
+class _CompanyScreenState extends State<CompanyScreen> {
+  CompanyModel companyModel = new CompanyModel();
+  @override
+  void widgetsBindingAsyncCallback(
+      BuildContext context, CompanyModel model) async {
+    await model.initData();
+  }
+
+  final companyService = CompanyService();
+  List<Company> company = [];
   bool _isLoading = false;
   late List myList;
   ScrollController _scrollController = ScrollController();
@@ -37,17 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
     for (int i = _currentMax; i < _currentMax + 10; i++) {
       myList.add("Item : ${i + 1}");
     }
-
     _currentMax = _currentMax + 6;
-
     setState(() {});
   }
 
   void _getEvent() async {
     setState(() => _isLoading = true);
-    // homes = await homeService.getEvent();
+    company = await companyService.getEvent();
+    // company = await companyervice.getEvent();
     setState(() => _isLoading = false);
-    print('.............${homes}');
+    print('.............${companyModel}');
   }
 
   @override
@@ -64,45 +72,35 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        // itemExtent: 30,
-        // itemCount: 80,
-        itemCount: companys.length,
-        itemBuilder: (context, index) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
-          child: GestureDetector(
-            onTap: () => {
-              // showModalBottomSheet<void>(
-              //   isScrollControlled: true,
-              //   context: context,
-              //   backgroundColor: Colors.black,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.only(
-              //       topLeft: Radius.circular(20),
-              //       topRight: Radius.circular(20),
-              //     ),
-              //   ),
-              // builder: (BuildContext context) =>
-              //     ProductDetail(
-              //   product: products[index],
-              //   valueSetter: (Product value) =>
-              //       addCart(products[index]),
-              // ),
-              // ),
-            },
-            child: SlidableWidget(
-              child: CompanyContainer(company: companys[index]),
-              onTap: () => {
-                setState(() {
-                  companys.remove(companys[index]);
-                })
-              },
-              onDismissed: (action) => dismissSlidableItem(context, true),
+      body:
+       _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.teal,
+              ),
+            )
+          : 
+          ListView.builder(
+              controller: _scrollController,
+              itemCount: company.length,
+              itemBuilder: (context, index) => Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
+                child: SlidableWidget(
+                  child: CompanyContainer(
+                    company: company[index],
+                    child: EmlopeeScreen(),
+                  ),
+                  onTap: () => {
+                    setState(() {
+                      company.remove(company[index]);
+                      // companyModel.company.remove(companyModel.company[index]);
+                    })
+                  },
+                  onDismissed: (action) => dismissSlidableItem(context, true),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
