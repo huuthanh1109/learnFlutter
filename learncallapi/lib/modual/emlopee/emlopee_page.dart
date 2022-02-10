@@ -15,38 +15,55 @@ class EmlopeeScreen extends StatefulWidget {
 class _EmlopeeScreenState extends State<EmlopeeScreen> {
   final emlopeeService = EmlopeeService();
   List<Emlopee> emlopee = [];
-  bool _isLoading = false;
-  late List myList;
-  ScrollController _scrollController = ScrollController();
-  int _currentMax = 6;
-
+  // bool _isLoading = false;
+  // // List myList = [];
+  // ScrollController _scrollController = ScrollController();
+  // static int page = 10;
   @override
   void initState() {
     super.initState();
+
+    // myList = List.generate(10, (i) => "Item : ${i + 1}");
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels ==
+    //       _scrollController.position.maxScrollExtent) {
+    //     // _getMoreData(page);
+    //   }
+    // });
     _getEvent();
-
-    myList = List.generate(10, (i) => "Item : ${i + 1}");
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        _getMoreData();
-      }
-    });
   }
 
-  _getMoreData() {
-    for (int i = _currentMax; i < _currentMax + 10; i++) {
-      myList.add("Item : ${i + 1}");
-    }
-    _currentMax = _currentMax + 10;
+  // _getMoreData() {
+  //   for (int i = _currentMax; i < _currentMax + 10; i++) {
+  //     myList.add("Item : ${i + 1}");
+  //   }
+  //   _currentMax = _currentMax + 10;
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
+  // void _getMoreData(int index) async {
+  //   if (!_isLoading) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+
+  //     List<Emlopee> tList = [];
+  //     for (int i = 0; i < page + 10; i++) {
+  //       tList.add(emlopee[i]);
+  //     }
+
+  //     setState(() {
+  //       _isLoading = false;
+  //       emlopee.addAll(tList);
+  //       page++;
+  //     });
+  //   }
+  // }
 
   void _getEvent() async {
-    setState(() => _isLoading = true);
+    // setState(() => _isLoading = true);
     emlopee = await emlopeeService.getEvent();
-    setState(() => _isLoading = false);
+    // setState(() => _isLoading = false);
     print('emlopee.............${emlopee}');
   }
 
@@ -64,31 +81,32 @@ class _EmlopeeScreenState extends State<EmlopeeScreen> {
           ),
         ),
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Colors.orange,
-              ),
-            )
-          : ListView.builder(
-              controller: _scrollController,
-              itemCount: emlopee.length,
-              itemBuilder: (context, index) => Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
-                child: SlidableWidget(
-                  child: EmlopeeContainer(
-                    emlopee: emlopee[index],
-                  ),
-                  onTap: () => {
-                    setState(() {
-                      emlopee.remove(emlopee[index]);
-                    })
-                  },
-                  onDismissed: (action) => dismissSlidableItem(context, true),
-                ),
-              ),
+      body:
+          //  _isLoading
+          //     ? const Center(
+          //         child: CircularProgressIndicator(
+          //           color: Colors.orange,
+          //         ),
+          //       )
+          //     :
+          ListView.builder(
+        // controller: _scrollController,
+        itemCount: emlopee.length,
+        itemBuilder: (context, index) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
+          child: SlidableWidget(
+            child: EmlopeeContainer(
+              emlopee: emlopee[index],
             ),
+            onTap: () => {
+              setState(() {
+                emlopee.remove(emlopee[index]);
+              })
+            },
+            onDismissed: (action) => dismissSlidableItem(context, true),
+          ),
+        ),
+      ),
     );
   }
 

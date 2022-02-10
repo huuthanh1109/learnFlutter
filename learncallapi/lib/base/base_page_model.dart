@@ -24,7 +24,6 @@ class BasePageModel extends ChangeNotifier {
   handleErrors(dynamic response, BuildContext context, {bool isShowPopup = true, required final Function(bool) callback}) async {
     this.setBusy(false);
     if (response is ResponseObject) {
-      // AppPopup.showErrorMessage(context, '${GlobalLocale.unknownError} : ${response.toString()}');
       return response;
     }
 
@@ -35,7 +34,6 @@ class BasePageModel extends ChangeNotifier {
       if (_errorMessage == null || _errorMessage == '') {
         _errorMessage = _errorCode;
       }
-      // AppPopup.showErrorMessage(context, _errorMessage);
       if (callback != null) callback(true);
     }
     return response;

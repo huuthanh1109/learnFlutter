@@ -6,6 +6,7 @@ import 'package:learncallapi/modual/company/company_model.dart';
 import 'package:learncallapi/modual/emlopee/emlopee_page.dart';
 import 'package:learncallapi/services/company_service.dart';
 import 'package:learncallapi/widgets/slidable_widget.dart';
+import 'package:provider/provider.dart';
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({Key? key}) : super(key: key);
@@ -16,14 +17,14 @@ class CompanyScreen extends StatefulWidget {
 
 class _CompanyScreenState extends State<CompanyScreen> {
   CompanyModel companyModel = new CompanyModel();
-  @override
-  void widgetsBindingAsyncCallback(
-      BuildContext context, CompanyModel model) async {
-    await model.initData();
-  }
+  // @override
+  // void widgetsBindingAsyncCallback(
+  //     BuildContext context, CompanyModel model) async {
+  //   await model.initData();
+  // }
 
   final companyService = CompanyService();
-  List<Company> company = [];
+  // List<Company> company = [];
   bool _isLoading = false;
   late List myList;
   ScrollController _scrollController = ScrollController();
@@ -31,35 +32,33 @@ class _CompanyScreenState extends State<CompanyScreen> {
 
   @override
   void initState() {
+    companyModel.getEvent();
     super.initState();
-    _getEvent();
-    myList = List.generate(10, (i) => "Item : ${i + 1}");
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        _getMoreData();
-      }
-    });
   }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _getEvent();
+  //   myList = List.generate(10, (i) => "Item : ${i + 1}");
+  //   _scrollController.addListener(() {
+  //     if (_scrollController.position.pixels ==
+  //         _scrollController.position.maxScrollExtent) {
+  //       _getMoreData();
+  //     }
+  //   });
+  // }
 
-  _getMoreData() {
-    for (int i = _currentMax; i < _currentMax + 10; i++) {
-      myList.add("Item : ${i + 1}");
-    }
-    _currentMax = _currentMax + 6;
-    setState(() {});
-  }
-
-  void _getEvent() async {
-    setState(() => _isLoading = true);
-    company = await companyService.getEvent();
-    // company = await companyervice.getEvent();
-    setState(() => _isLoading = false);
-    print('.............${companyModel}');
-  }
+  // void _getEvent() async {
+  //   setState(() => _isLoading = true);
+  //   // company = await companyService.getEvent();
+  //   // company = await companyervice.getEvent();
+  //   setState(() => _isLoading = false);
+  //   print('s.............${companyModel}');
+  // }
 
   @override
   Widget build(BuildContext context) {
+    print('company.............${companyModel.company}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -73,36 +72,39 @@ class _CompanyScreenState extends State<CompanyScreen> {
         ),
       ),
       body:
-       _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Colors.teal,
-              ),
-            )
-          : 
+          //  _isLoading
+          //     ? const Center(
+          //         child: CircularProgressIndicator(
+          //           color: Colors.teal,
+          //         ),
+          //       )
+          //     :
           ListView.builder(
-              controller: _scrollController,
-              itemCount: company.length,
-              itemBuilder: (context, index) => Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
-                child: SlidableWidget(
-                  child: CompanyContainer(
-                    company: company[index],
-                    child: EmlopeeScreen(),
-                  ),
-                  onTap: () => {
-                    setState(() {
-                      company.remove(company[index]);
-                      // companyModel.company.remove(companyModel.company[index]);
-                    })
-                  },
-                  onDismissed: (action) => dismissSlidableItem(context, true),
-                ),
-              ),
+        controller: _scrollController,
+        itemCount: companyModel.company.length,
+        // itemCount: company.length,
+        itemBuilder: (context, index) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
+          child: SlidableWidget(
+            child: CompanyContainer(
+              company: companyModel.company[index],
+              // company: company[index],
+              child: EmlopeeScreen(),
             ),
+            onTap: () => {
+              setState(() {
+                // company.remove(company[index]);
+                // companyModel.company.remove(companyModel.company[index]);
+              })
+            },
+            onDismissed: (action) => dismissSlidableItem(context, true),
+          ),
+        ),
+      ),
     );
   }
+
+  CompanyModel model() => companyModel;
 }
 
 class Utils {
